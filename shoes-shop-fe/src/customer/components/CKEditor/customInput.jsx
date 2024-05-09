@@ -9,7 +9,6 @@ const CustomInput = (props) => {
   const [data, setData] = useState("");
 
   console.log("des", data);
-
   const handleInputChange = (value) => {
     setData(value);
     onDataChange(value);

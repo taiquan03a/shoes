@@ -5,9 +5,9 @@ application:
       expiration: 604800000
   secret-key: roblnkSecretKey1511ebcaccab1555cac46ca878eda68464dawdbipogepmmeopkawkk6a44946opiu
 cloudinary:
-  api-key: 887812432951354
-  api-secret: 2yGg1_La5nS0VVNZH970wYrFiUw
-  cloud-name: dmvncmrci
+  api-key: 891893339399535
+  api-secret: _mOk7EbEtcG9bYZ_kQIuSLRZQqU
+  cloud-name: dt7eo0hbq
   secure: true
 spring:
   datasource:

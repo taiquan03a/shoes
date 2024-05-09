@@ -107,10 +107,11 @@ const AdminProductEdit = (props) => {
       defaultImage !== "" &&
       parseInt(dataCategory.id) !== null
     ) {
+      console.log(dataNameProduct)
+      console.log(dataDescription)
       const specialCharacterRegex = /[!@#$%^&*(),.?":{}|<>]/;
       if (
-        specialCharacterRegex.test(dataNameProduct) ||
-        specialCharacterRegex.test(dataDescription)
+        specialCharacterRegex.test(dataNameProduct)
       ) {
         message.error("Không được nhập các ký tự đặc biệt");
       } else {

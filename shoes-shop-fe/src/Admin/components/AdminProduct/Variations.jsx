@@ -139,8 +139,8 @@ const Variations = (props) => {
         if (variation.text !== "") {
           // Sử dụng biểu thức chính quy để kiểm tra xem chuỗi chỉ chứa số hay không
           const numericRegex = /^\d+$/;
-
-          if (numericRegex.test(variation.text)) {
+          console.log(variation.text)
+          if (numericRegex.test(variation.size)) {
             console.log("variations size", variations);
             return { size: variation.size };
           } else {
