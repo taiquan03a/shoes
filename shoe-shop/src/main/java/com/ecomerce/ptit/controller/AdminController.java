@@ -1,9 +1,11 @@
 package com.ecomerce.ptit.controller;
 
 import com.ecomerce.ptit.dto.user.UserCreateRequest;
+import com.ecomerce.ptit.dto.voucher.VoucherCreateRequest;
 import com.ecomerce.ptit.exception.ErrorResponse;
 import com.ecomerce.ptit.exception.InputFieldException;
 import com.ecomerce.ptit.exception.UserException;
+import com.ecomerce.ptit.model.Voucher;
 import com.ecomerce.ptit.service.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ public class AdminController {
     private final ProductService productService;
     private final StatusService statusService;
     private final OrderService orderService;
+    private final VoucherService voucherService;
+
     @GetMapping("/user")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<?> getDetailUser(@RequestParam("id") Long id) throws UserException {
@@ -129,5 +133,20 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.OK).body(revenue);
         } else
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You do not have permission to access this resource!");
+    }
+    @GetMapping("/vouchers")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+    public ResponseEntity<?> getAll(){
+        var vouchers = voucherService.getAll();
+        if(vouchers != null){
+            return ResponseEntity.status(HttpStatus.OK).body(vouchers);
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("You do not have permission to access this resource!");
+        }
+    }
+    @GetMapping("/vouchers/{voucherID}")
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+    public ResponseEntity<?> voucherDetail(@PathVariable Long voucherID){
+        return voucherService.getVoucherDetail(voucherID);
     }
 }

@@ -3,7 +3,8 @@ import React from "react";
 
 const OrderDetailPrice = (props) => {
   const { detailOrder } = props;
-
+  console.log(detailOrder);
+  const reducedPrice = detailOrder.totalPayment - detailOrder.finalPayment + detailOrder.delivery.price;
   return (
     <div>
       <Row className="border-t border-l border-r border-gray-300 text-right">
@@ -36,6 +37,25 @@ const OrderDetailPrice = (props) => {
           style={{ height: "32px", lineHeight: "32px" }}
         >
           {detailOrder.totalPayment.toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          })}
+        </Col>
+      </Row>
+      <Row className="border-t border-l border-r border-gray-300 text-right">
+        <Col
+          span={16}
+          className="border-l pr-4 font-semibold"
+          style={{ height: "32px", lineHeight: "32px" }}
+        >
+          Tiền khuyến mãi
+        </Col>
+        <Col
+          span={8}
+          className="border-l pr-4"
+          style={{ height: "32px", lineHeight: "32px" }}
+        > -
+          {reducedPrice.toLocaleString("vi-VN", {
             style: "currency",
             currency: "VND",
           })}

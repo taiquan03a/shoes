@@ -28,5 +28,7 @@ public class ErrorMessage {
     public static final String FILL_IN_THE_INPUT_FIELD = "Fill in the input field";
     public static final String EMPTY_PHONE_NUMBER = "Phone number cannot be empty";
     public static final String EMPTY_POST_INDEX = "Post index cannot be empty";
+    public static final String VOUCHER_IN_USE = "Voucher code is already in use. Please try another voucher code!";
+    public static final String VOUCHER_NOT_FOUND = "Voucher not found";
 
 }

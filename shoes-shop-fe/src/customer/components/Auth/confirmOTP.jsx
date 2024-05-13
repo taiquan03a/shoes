@@ -26,10 +26,15 @@ export default function ConfirmOTP() {
   const [otp, setOtp] = useState("");
   const { email } = useParams();
   console.log(("email", email));
-
+  const [dataAPICreate, setDataAPICreate] = useState(null);
   const navigate = useNavigate();
 
-  const mutation = useMutationHook((data) => AuthService.sendOTP(data));
+  const mutation = useMutationHook((data) => {
+    const res = AuthService.sendOTP(data);
+    console.log(res);
+    return res;
+  });
+
 
   const { isSuccess, isError } = mutation;
 
@@ -47,7 +52,7 @@ export default function ConfirmOTP() {
     width: "100%",
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = () => {
     mutation.mutate(
       {
         email: email,
@@ -62,11 +67,34 @@ export default function ConfirmOTP() {
         },
       }
     );
+    // const productCreateRequest = {
+    //   email: email,
+    //   oneTimePassword: otp,
+    // };
+
+    // const apiPayload = {
+    //   ...productCreateRequest,
+    // };
+    // setDataAPICreate(apiPayload);
+    // console.log("", apiPayload);
+    // mutation.mutate(apiPayload, {
+    //   onSuccess: () => {
+    //     message.success("Thêm mới sản phẩm thành công");
+    //     setTimeout(() => {
+    //       window.location.reload();
+    //     }, 1000);
+    //   },
+    //   onError: (error) => {
+    //     message.error(`Đã xảy ra lỗi: ${error.message}`);
+    //     setTimeout(() => {
+    //       window.location.reload();
+    //     }, 1000);
+    //   },
+    // });
     localStorage.clear();
   };
-
-  const handleOnChangeOTP = (value) => {
-    setOtp(value);
+  const handleOnChangeOTP = (event) => {
+    setOtp(event.target.value);
   };
 
   return (

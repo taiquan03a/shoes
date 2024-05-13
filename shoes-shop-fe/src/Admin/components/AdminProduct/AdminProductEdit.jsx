@@ -18,7 +18,6 @@ import * as AuthService from "../../../services/AuthService";
 import CustomInput from "../../../customer/components/CKEditor/customInput";
 
 const AdminProductEdit = (props) => {
-  // console.log("key", props.idDetailProduct);
   const dispatch = useDispatch();
 
   let productDetail = useSelector(
@@ -93,7 +92,6 @@ const AdminProductEdit = (props) => {
       return Promise.reject(err);
     }
   );
-
   const mutation = useMutationHook((data) => {
     const res = ProductService.editProduct(data, auth.accessToken, axiosJWT);
     return res;

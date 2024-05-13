@@ -52,7 +52,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sendOTP")
-    public ResponseEntity<?> sendOTP(@Valid @RequestBody OtpRequest request, BindingResult bindingResult){
+    public ResponseEntity<?> sendOTP(@RequestBody OtpRequest request, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return ResponseEntity.status(HttpStatusCode.valueOf(403)).body(new InputFieldException(bindingResult).getMessage());
         }

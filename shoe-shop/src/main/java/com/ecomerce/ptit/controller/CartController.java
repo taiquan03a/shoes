@@ -36,7 +36,10 @@ public class CartController {
 
     @PostMapping("/")
     @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMINISTRATOR')")
-    public ResponseEntity<?> editCart(Principal principal, @RequestBody @Valid List<CartItemEditRequest> list) {
+    public ResponseEntity<?> editCart(
+            Principal principal,
+            @RequestBody @Valid List<CartItemEditRequest> list
+    ) {
         return cartService.editUserCart(principal, list);
     }
 
@@ -46,9 +49,6 @@ public class CartController {
                                       HttpServletRequest request,
                                       RedirectAttributes redirectAttributes) throws URISyntaxException {
         return cartService.checkoutCart(principal, list, request, redirectAttributes);
-
-
-
     }
 
     @GetMapping("/delivery")

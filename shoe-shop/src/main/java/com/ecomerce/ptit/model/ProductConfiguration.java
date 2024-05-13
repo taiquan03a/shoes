@@ -8,6 +8,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "product_configuration")
 public class ProductConfiguration {
 
     @Id

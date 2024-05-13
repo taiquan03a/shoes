@@ -6,9 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -25,6 +23,8 @@ public class Orders {
     private Integer totalPayment;
     private Integer totalItem;
     private Integer finalPayment;
+    @Column(name = "reduced_price")
+    private Integer reducedPrice;
 
     @Column(name = "created_at")
     @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
@@ -65,5 +65,9 @@ public class Orders {
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<OrderItem> orderItems = new ArrayList<>();
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
 
 }

@@ -10,13 +10,18 @@ import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import * as AuthService from "../../../services/AuthService";
+import * as VoucherService from "../../../services/VoucherService";
 import { loginSuccess } from "../../../redux/slides/authSlice";
 import ProvinceSelection from "./Address";
+import InputField from "../InputField";
 
 const objectPrice = {
   1: 18000,
   2: 45000,
   3: 99000,
+};
+const input80Width = {
+  width: "100%",
 };
 const Cart = () => {
   const auth = useSelector((state) => state.auth.login.currentUser);
@@ -24,6 +29,8 @@ const Cart = () => {
   const [selectedPayment, setSelectedPayment] = React.useState(2);
   const [selectedShipment, setSelectedShipment] = React.useState(1);
   const [totalPrice, setTotalPrice] = useState();
+  const [voucherCode, setVoucherCode] = useState();
+  const [reducedPrice, setReducedPrice] = useState();
   const [state, setState] = React.useState({
     city: "",
     district: "",
@@ -31,6 +38,7 @@ const Cart = () => {
     address: "",
   });
   const dispatch = useDispatch();
+
 
   const refreshToken = async () => {
     try {
@@ -75,6 +83,7 @@ const Cart = () => {
 
   const mutation = useMutationHook((data) => {
     const res = CartService.checkOutCarts(data, auth.accessToken, axiosJWT);
+    console.log(data);
     return res;
   });
   const { data, status, isSuccess, isError } = mutation;
@@ -115,6 +124,8 @@ const Cart = () => {
             },
             paymentMethodId: selectedPayment,
             deliveryId: selectedShipment,
+            reducedPrice : reducedPrice,
+            voucherCode : voucherCode,
           },
           {
             onSuccess: (data) => {
@@ -138,26 +149,54 @@ const Cart = () => {
       message.warning("Hãy nhập đầy đủ thông tin địa chỉ trước khi Đặt hàng");
     }
   };
-
+  const {data: calculate} = useQuery({
+    queryKey: [voucherCode,cart.totalPrice],
+    queryFn: () =>{
+      return VoucherService.calculate({
+        voucherCode: voucherCode,
+        totalAmount : cart.totalPrice,
+      });
+    },
+  });
+  console.log(calculate);
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
   const calculateTotalPrice = () => {
     if (cart) {
-      return cart.totalPrice + objectPrice[selectedShipment];
+      return cart.totalPrice - reducedPrice + objectPrice[selectedShipment];
     }
+    // else{
+    //   if(cart){
+    //     cart.totalPrice + objectPrice[selectedShipment];
+    //   }
+    //   return 0
+    // }
     return 0;
   };
-
+  const calculateVoucher = () =>{
+    if (calculate){
+      return cart.totalPrice - calculate;
+    }
+    return 0;
+  }
+  useEffect(() => {
+    setReducedPrice(calculateVoucher());
+  },[cart,calculate]);
+  console.log(reducedPrice);
   useEffect(() => {
     setTotalPrice(calculateTotalPrice());
-  }, [cart, selectedShipment]);
+  }, [cart,reducedPrice, selectedShipment]);
 
   useEffect(() => {
     // Lần đầu được mounted
     setTotalPrice(calculateTotalPrice());
   }, []);
+
+  const handleChange = (value) => {
+    setVoucherCode(value);
+  };
 
   // console.log("totalPrice", totalPrice);
 
@@ -184,7 +223,7 @@ const Cart = () => {
 
             <div className="space-y-3">
               <div className="flex text-lg justify-between pt-3 text-black mb-5">
-                <span className="font-semibold">Tổng tiền: </span>
+                <span className="font-semibold">Tổng tiền sản phẩm: </span>
                 <span className="text-red-600 font-semibold">
                   {cart?.totalPrice.toLocaleString("vi-VN", {
                     style: "currency",
@@ -228,35 +267,24 @@ const Cart = () => {
                   Bạn đang đặt hàng cho {cart?.cartItems.length} sản phẩm
                 </div>
                 <h1 className="text-2xl font-bold">Thông tin đặt hàng</h1>
-                {/* <div className="mt-2">
-                  <label>Địa chỉ giao hàng</label>
-                  <Input
-                    value={state.streetAddress}
-                    onChange={onChangeText("streetAddress")}
-                    placeholder="Địa chỉ giao hàng"
-                  />
-                </div>
-                <div className="my-2">
-                  <label>Thành phố</label>
-                  <Input
-                    value={state.city}
-                    onChange={onChangeText("city")}
-                    placeholder="Thành phố"
-                  />
-                </div>
-                <div className="mb-2">
-                  <label>Zip code</label>
-                  <Input
-                    value={state.zipCode}
-                    onChange={onChangeText("zipCode")}
-                    placeholder="Zip code"
-                  />
-                </div> */}
                 <ProvinceSelection
                   state={state}
                   setState={setState}
                   isModalOpen={isModalOpen}
                 />
+                <div className="mb-2 mt-4">
+                  <label className="mr-2 block font-semibold">
+                    Chọn mã khuyến mãi:
+                  </label>
+                  <InputField
+                    value={voucherCode}
+                    label={"Mã khuyến mãi"}
+                    name={"voucherCode"}
+                    type={"text"}
+                    style={input80Width}
+                    handleOnChange={handleChange}
+                  />
+                </div>
                 <div className="mb-2 mt-4">
                   <label className="mr-2 block font-semibold">
                     Chọn phương thức thanh toán:
@@ -293,6 +321,12 @@ const Cart = () => {
                       style: "currency",
                       currency: "VND",
                     })}
+                  </span>
+                </div>
+                <div className="flex justify-between pt-3 text-black">
+                  <span>Giảm giá sản phẩm:</span>
+                  <span>-
+                    {reducedPrice} đ
                   </span>
                 </div>
                 <div className="flex justify-between pt-3 text-black">

@@ -27,4 +27,5 @@ public class OrderResponsev2 {
     private DeliveryDTO delivery;
     private String statusOrder;
     private Integer finalPayment;
+    private Integer reducedPrice;
 }

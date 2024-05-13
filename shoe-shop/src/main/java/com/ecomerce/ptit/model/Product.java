@@ -7,9 +7,7 @@ import lombok.*;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -70,5 +68,11 @@ public class Product {
     @JsonIgnore
     private List<ProductItem> productItems = new ArrayList<>();
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "voucher_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "voucher_id"))
+    @JsonIgnore
+    private Set<Voucher> vouchers = new HashSet<>();
 
 }

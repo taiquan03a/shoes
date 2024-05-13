@@ -32,10 +32,9 @@ export const signUp = async (data) => {
 
 export const sendOTP = async (data) => {
   const res = await axios.post(
-    `${process.env.REACT_APP_API_URL}auth/sendOTP`,
+    `http://localhost:8080/api/v1/auth/sendOTP`,
     data
   );
-  console.log(res.data);
   return res.data;
 };
 

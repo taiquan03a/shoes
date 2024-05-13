@@ -17,7 +17,7 @@ public interface CartService {
     ResponseEntity<?> getUserCart(Principal principal);
     UserCart getUserCartv2(Principal principal);
 
-    ResponseEntity<?> editUserCart(Principal principal, @Valid List<CartItemEditRequest> list);
+    ResponseEntity<?> editUserCart(Principal principal, @Valid List<CartItemEditRequest> list );
 
     ResponseEntity<?> checkoutCart(Principal principal, CheckoutRequest list, HttpServletRequest request, RedirectAttributes redirectAttributes) throws URISyntaxException;
 }

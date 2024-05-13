@@ -319,7 +319,7 @@ public class IAuthenticationService implements AuthenticationService {
         }
         String lmao = new String(otp);
         String encodedOTP = passwordEncoder.encode(lmao);
-
+        System.out.println(lmao);
         user.setOneTimePassword(encodedOTP);
         user.setOtpRequestedTime(new Date(System.currentTimeMillis()));
         return lmao;

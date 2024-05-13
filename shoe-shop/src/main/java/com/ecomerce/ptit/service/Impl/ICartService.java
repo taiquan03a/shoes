@@ -55,6 +55,7 @@ public class ICartService implements CartService {
     private final EmailService emailService;
     private final ProductItemRepository productItemRepository;
     private final ProductRepository productRepository;
+    private final VoucherRepository voucherRepository;
 
     @Override
     public ResponseEntity<?> getUserCart(Principal principal) {
@@ -251,6 +252,7 @@ public class ICartService implements CartService {
 
     @Override
     public ResponseEntity<?> checkoutCart(Principal principal, CheckoutRequest list, HttpServletRequest request, RedirectAttributes redirectAttributes) throws URISyntaxException {
+        System.out.println(list.getReducedPrice());
         var user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         if (user != null) {
             if (list.getCartItemId().isEmpty()) {
@@ -368,16 +370,18 @@ public class ICartService implements CartService {
                     }
                 }
                 if (flagValid) {
-
+                    Voucher voucher = voucherRepository.findByCode(list.getVoucherCode()).get();
                     orders.setTotalItem(totalItem);
                     orders.setTotalPayment(totalPayment);
-                    orders.setFinalPayment(totalPayment + delivery.getPrice());
+                    orders.setFinalPayment(totalPayment + delivery.getPrice() - list.getReducedPrice());
+                    orders.setReducedPrice(list.getReducedPrice());
                     var statusOrder = statusOrderRepository.findStatusOrderByOrderStatusContaining(Status.DANG_XU_LY.toString());
                     statusOrder.get().getOrders().add(orders);
                     orders.setStatusOrder(statusOrder.get());
                     orders.setDelivery(delivery);
                     orders.setCreatedAt(new Date(System.currentTimeMillis()));
                     orders.setUpdateAt(new Date(System.currentTimeMillis()));
+                    orders.setVoucher(voucher);
                     var userPaymentMethod = userPaymentMethodService.getAllUserPaymentMethod(user.getId());
                     boolean addNewPayment = true;
                     addPayment:

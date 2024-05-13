@@ -5,6 +5,7 @@ import {
   FileDoneOutlined,
   PlusCircleOutlined,
   FormOutlined,
+  PicLeftOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { getItem } from "../../utils/untils";
@@ -13,6 +14,8 @@ import AdminUser from "../components/AdminUser/AdminUser";
 import AdminProduct from "../components/AdminProduct/AdminProduct";
 import AdminProductCreate from "../components/AdminProduct/AdminProductCreate";
 import AdminOrder from "../components/AdminOrder/AdminOrder";
+import AdminVoucher from "../components/AdminVoucher/AdminVoucher";
+import AdminVoucherCreate from "../components/AdminVoucher/AdminVoucherCreate";
 import { WrapperHeader } from "../components/AdminUser/style";
 import { useQuery } from "@tanstack/react-query";
 import * as CategoryService from "../../services/CategoryService";
@@ -35,6 +38,11 @@ function AdminPage(props) {
     getItem("Đơn hàng", "sub4", <FileDoneOutlined />, [
       getItem("Quản lý Đơn hàng", "listOrders", <FormOutlined />),
     ]),
+    getItem("Khuyến mãi", "sub5", <PicLeftOutlined />, [
+      getItem("Quản lý Khuyến mãi", "listVouchers", <FormOutlined />),
+      getItem("Thêm Khuyến mãi", "addVoucher", <PlusCircleOutlined />),
+    ]),
+    
   ];
   const rootSubmenuKeys = ["user", "product", "order", "statistical"];
 
@@ -74,6 +82,10 @@ function AdminPage(props) {
         return <AdminProductCreate />;
       case "listOrders":
         return <AdminOrder />;
+      case "listVouchers":
+        return <AdminVoucher/>;
+      case "addVoucher":
+          return <AdminVoucherCreate />;
       default:
         return <AdminStatistical />;
     }
